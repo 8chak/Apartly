@@ -7,7 +7,7 @@
                      <div class="full">
                         <div class="center-desk">
                            <div class="logo">
-                              <a href="/"><img src="{{asset('images')}}/apartly.png" alt="#" /></a>
+                              <a href="/"><img src="{{asset('images')}}/Apartly.png" alt="#" /></a>
                            </div>
                         </div>
                      </div>
