@@ -8,8 +8,6 @@
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <!-- site metas -->
       <title>{{ config('app.name', 'Laravel') }}</title>
-      <!-- @vite(['resources/css/app.css', 'resources/js/app.js']) -->
-       @stack('styles')
       <!-- bootstrap css -->
       <link rel="stylesheet" href="{{ asset('css') }}/bootstrap.min.css">
       <!-- style css -->
@@ -24,9 +22,8 @@
       <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" media="screen">
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-      <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
+      @stack('styles')
+
    </head>
    <!-- body -->
    <body class="main-layout">

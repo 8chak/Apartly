@@ -14,7 +14,6 @@ RUN apt-get update && apt-get install -y libpq-dev pkg-config \
     && docker-php-ext-install pdo_pgsql pgsql
 
 
-
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
