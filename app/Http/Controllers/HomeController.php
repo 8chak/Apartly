@@ -23,7 +23,7 @@ class HomeController extends Controller
             // dd($user);
             return view('admin.dashboard');
         }elseif($user->user_type === 'user'){
-            return view('theme.index');
+            return redirect()->route('hotel');
         }
         return redirect()->back();
     }
