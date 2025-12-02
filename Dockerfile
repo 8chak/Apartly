@@ -15,8 +15,9 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
 RUN apt-get install -y nodejs
 
 # Install PostgreSQL PHP extensions
-RUN docker-php-ext-install pdo_pgsql pgsql
-
+RUN apt-get update && apt-get install -y libpq-dev pkg-config \
+    && docker-php-ext-install pdo_pgsql pgsql
+    
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
 
