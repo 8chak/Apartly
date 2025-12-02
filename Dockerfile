@@ -1,13 +1,18 @@
 FROM php:8.2-apache
 
+
 # Install dependencies
 RUN apt-get update && apt-get install -y \
-    git \
-    curl \
-    libzip-dev \
-    zip \
-    unzip \
-    && docker-php-ext-install pdo pdo_mysql zip
+git \
+curl \
+libzip-dev \
+zip \
+unzip \
+&& docker-php-ext-install pdo pdo_mysql zip
+
+#node modules
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+RUN apt-get install -y nodejs
 
 # Install PostgreSQL PHP extensions
 RUN apt-get update && apt-get install -y libpq-dev pkg-config \
