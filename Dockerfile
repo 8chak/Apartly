@@ -25,7 +25,8 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www/html
 
-#npm 
+# Build frontend assets
+RUN npm install
 RUN npm run build
 
 # Copy application
