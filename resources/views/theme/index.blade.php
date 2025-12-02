@@ -1,0 +1,9 @@
+@extends('theme.layout')
+@section('content')
+@include('theme.hero-banner')
+@include('theme.about')
+@include('theme.rooms')
+@include('theme.gallery')
+@include('theme.blog')
+@include('theme.contact')
+@endsection
