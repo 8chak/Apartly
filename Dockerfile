@@ -22,15 +22,13 @@ RUN apt-get update && apt-get install -y libpq-dev pkg-config \
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Set working directory
+# Copy app (IMPORTANT: before npm commands)
+COPY . /var/www/html
 WORKDIR /var/www/html
 
 # Build frontend assets
 RUN npm install
 RUN npm run build
-
-# Copy application
-COPY . .
 
 # Install dependencies
 RUN composer install --optimize-autoloader --no-dev
