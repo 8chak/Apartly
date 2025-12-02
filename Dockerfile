@@ -15,29 +15,32 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
 RUN apt-get install -y nodejs
 
 # Install PostgreSQL PHP extensions
-RUN apt-get update && apt-get install -y libpq-dev pkg-config \
-    && docker-php-ext-install pdo_pgsql pgsql
+RUN docker-php-ext-install pdo_pgsql pgsql
 
+# Enable Apache mod_rewrite
+RUN a2enmod rewrite
 
-# Install Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
-# Copy app (IMPORTANT: before npm commands)
-COPY . /var/www/html
+# Set working directory
 WORKDIR /var/www/html
 
-# Build frontend assets
-RUN npm install
+# COPY source code (very important: BEFORE npm install)
+COPY . .
+
+# Install JS dependencies
+RUN npm ci
+
+# Build assets
 RUN npm run build
 
 # Install dependencies
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Install Composer
 RUN composer install --optimize-autoloader --no-dev
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Enable Apache mod_rewrite
-RUN a2enmod rewrite
 
 # Configure Apache DocumentRoot to Laravel's public directory
 ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
