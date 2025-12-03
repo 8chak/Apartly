@@ -27,6 +27,13 @@ WORKDIR /var/www/html
 # COPY source code (very important: BEFORE npm install)
 COPY . .
 
+# Create the directory:
+RUN mkdir -p public/storage/images/gallery \
+             public/storage/images/rooms \
+             public/storage/images/posts && \
+    chown -R www-data:www-data public/storage && \
+    chmod -R 775 public/storage
+
 # Install JS dependencies
 RUN npm ci
 
