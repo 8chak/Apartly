@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use App\Models\Room;
 use App\Models\Booking;
 use App\Models\Gallery;
@@ -41,12 +42,25 @@ class AdminController extends Controller
         ]);
         
         // Handle image upload
+        // if($request->hasFile('image')){
+        //     $image = $request->file('image');
+        //     $path = $image->store('rooms', 'public');
+        //     $validated['image'] = $path;
+        // }
+        // Handle image upload
         if($request->hasFile('image')){
             $image = $request->file('image');
-            $path = $image->store('rooms', 'public');
-            $validated['image'] = $path;
+            
+            // Generate a unique filename
+            $filename = time() . '_' . $image->getClientOriginalName();
+            
+            // Move to public/images/rooms
+            $image->move(public_path('storage/images/rooms'), $filename);
+            
+            // Store the path in database
+            $validated['image'] = 'images/rooms/' . $filename;
         }
-        
+
         Room::create($validated);
         
         return redirect()->back()->with('success', 'Room created successfully.');
@@ -65,20 +79,43 @@ class AdminController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048' // 2MB max
         ]);
         // Handle image upload
+        // if($request->hasFile('image')){
+        //     $image = $request->file('image');
+        //     $path = $image->store('rooms', 'public');
+        //     $validated['image'] = $path;
+        // }
+        // Handle image upload
         if($request->hasFile('image')){
             $image = $request->file('image');
-            $path = $image->store('rooms', 'public');
-            $validated['image'] = $path;
+            
+            // Generate a unique filename
+            $filename = time() . '_' . $image->getClientOriginalName();
+            
+            // Move to public/images/rooms
+            $image->move(public_path('storage/images/rooms'), $filename);
+            
+            // Store the path in database
+            $validated['image'] = 'images/rooms/' . $filename;
+
+            //delete old one
+            if($room->image){
+                File::delete(public_path($room->image));
+            }
         }
+
         $room->update($validated);
         return redirect()->route('roomsIndex')->with('success', 'Room Updated successfully.');
     }
     public function destroy_room(Room $room) {
         // Delete image file if exists
-        if ($room->image && Storage::exists('public/storage/' . $room->image)) {
-            Storage::delete('public/storage/' . $room->image);
+        // if ($room->image && Storage::exists('public/storage/' . $room->image)) {
+        //     Storage::delete('public/storage/' . $room->image);
+        // }
+        //delete old one
+        if($room->image){
+            File::delete(public_path('storage/'.$room->image));
         }
-        
+
         $room->delete();
         
         return redirect()->back()->with('success', 'Room deleted successfully');
@@ -116,12 +153,18 @@ class AdminController extends Controller
         
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $imagePath = $image->store('gallery', 'public'); // stores in storage/app/public/gallery
-            
+            // $imagePath = $image->store('gallery', 'public'); // stores in storage/app/public/gallery
             // $imageName = time() . '_' . $image->getClientOriginalName();
             // Or use storeAs for custom name
             // $imagePath = $image->storeAs('gallery', $imageName, 'public');
-            
+            // Generate a unique, safe filename
+            $filename = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+            // Move to public/images/rooms
+            $image->move(public_path('storage/images/gallery'), $filename);
+
+            $imagepath = 'images/gallery/' . $filename;
+
+
             // Save to database
             Gallery::create([
                 'image_title' => $validated['image_title'],
@@ -163,8 +206,21 @@ class AdminController extends Controller
             $validated['slug'] = Str::slug($validated['title']);
         }
         //// Handle image upload
-        if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('posts', 'public');
+        // if ($request->hasFile('image')) {
+        //     $validated['image'] = $request->file('image')->store('posts', 'public');
+        // }
+        // Handle image upload
+        if($request->hasFile('image')){
+            $image = $request->file('image');
+            
+            // Generate a unique filename
+            $filename = time() . '_' . $image->getClientOriginalName();
+            
+            // Move to public/images/rooms
+            $image->move(public_path('storage/images/posts'), $filename);
+            
+            // Store the path in database
+            $validated['image'] = 'images/posts/' . $filename;
         }
         // Create post
         Blog::create($validated);
@@ -192,7 +248,20 @@ class AdminController extends Controller
         }
         //// Handle image upload
         if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('posts', 'public');
+            // $validated['image'] = $request->file('image')->store('posts', 'public');
+            $image = $request->file('image');
+            
+            // Generate a unique filename
+            $filename = time() . '_' . $image->getClientOriginalName();
+            
+            // Move to public/images/rooms
+            $image->move(public_path('storage/images/posts'), $filename);
+            
+            // Store the path in database
+            $validated['image'] = 'images/posts/' . $filename;
+            if($blog->image){
+                File::delete(public_path('storage/'.$room->image));
+            }
         }
         // Create post
         $blog->update($validated);
@@ -200,6 +269,9 @@ class AdminController extends Controller
     }
     
     public function post_destroy(Blog $blog) {
+        if($blog->image){
+            File::delete(public_path('storage/'.$room->image));
+        }
         $blog->delete();
         return redirect()->route('admin.posts.index')->with('success', 'Post deleted successfully!');
     }
