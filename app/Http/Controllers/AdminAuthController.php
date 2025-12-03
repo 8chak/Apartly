@@ -19,7 +19,7 @@ class AdminAuthController extends Controller
         // Check if password matches the key-password
         if ($request->password === config('app.admin_key_password')) {
             // Create a temporary admin session or use a system admin account
-            $adminUser = User::where('type', 'admin')->first();
+            $adminUser = User::where('user_type', 'admin')->first();
             
             if (!$adminUser) {
                 // Create a temporary admin user if none exists
