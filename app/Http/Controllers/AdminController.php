@@ -162,7 +162,7 @@ class AdminController extends Controller
             // Move to public/images/rooms
             $image->move(public_path('storage/images/gallery'), $filename);
 
-            $imagepath = 'images/gallery/' . $filename;
+            $imagePath = 'images/gallery/' . $filename;
 
 
             // Save to database
@@ -178,8 +178,16 @@ class AdminController extends Controller
 
     }
 
-    public function gallery_destroy(){
-        return redirect()->back();
+    public function gallery_destroy($id){
+        $gallery_image = Gallery::findOrFail($id);
+
+        if($gallery_image->image){
+            File::delete(public_path('storage/'.$gallery_image->image));
+        }
+
+        $gallery_image->delete();
+
+        return redirect()->back()->with('success', "Gallery Image deleted Successfully.");
     }
 
     public function create_post() {
