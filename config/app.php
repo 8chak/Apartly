@@ -123,4 +123,18 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+     /*
+    |--------------------------------------------------------------------------
+    | Initial Master Password
+    |--------------------------------------------------------------------------
+    | user enters address admin login page by entering a route,
+    |->uses a copy of the auth.admin view
+    |->posts to a custom controller admin controller
+    |->if the entered password is equal to a key-password, the user logs in as an admin
+    |->the user than enters admin register page which has middleware for type=admin
+    |->than user can register a new user with type=admin and logout from previous session and log in with a new session created.
+    */
+
+    'admin_key_password' => env('ADMIN_KEY_PASSWORD'),
+
 ];

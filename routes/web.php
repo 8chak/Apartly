@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\BookingsController;
+use App\Http\Controllers\AdminAuthController;
 
 Route::get('/', [HomeController::class, 'hotel_index'])->name('hotel');
 Route::get('/room-details/{room}', [HomeController::class, 'show_room'])->name('room_details');
@@ -45,3 +46,22 @@ Route::POST('/admin/gallery', [AdminController::class, 'store_gallery'])->name('
 Route::delete('/gallery/${selectedImageId}', [AdminController::class, 'gallery_destroy'])->name('delete_gallery');
 //
 Route::get('/admin/messages', [AdminController::class, 'messages_index'])->name('admin.messages.index');
+//
+//
+//
+//
+// Admin login routes
+Route::get('/admin-panel/login', function () {
+    return view('auth.admin-login');
+})->name('admin.login');
+Route::post('/admin-panel/login', [AdminAuthController::class, 'login'])
+    ->name('admin.login.post');
+
+// Admin register routes (protected by middleware)
+Route::middleware(['auth', 'admin-register'])->group(function () {
+    Route::get('/admin-panel/register', function () {
+        return view('auth.admin-register');
+    })->name('admin.register');
+    Route::post('/admin-panel/register', [AdminAuthController::class, 'register'])
+        ->name('admin.register.post');
+});
