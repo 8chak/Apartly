@@ -27,7 +27,7 @@ class AdminAuthController extends Controller
                     'name' => 'Temporary Admin',
                     'email' => 'temp_admin_' . time() . '@system.local',
                     'password' => Hash::make(uniqid()),
-                    'type' => 'admin',
+                    'user_type' => 'admin',
                 ]);
             }
             
@@ -52,7 +52,7 @@ class AdminAuthController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'type' => 'admin',
+            'user_type' => 'admin',
         ]);
 
         // Logout from the temporary session
