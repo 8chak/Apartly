@@ -15,7 +15,7 @@ class EnsureUserIsAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!auth()->check() || auth()->user()->type !== 'admin') {
+        if (!auth()->check() || auth()->user()->user_type !== 'admin') {
             abort(403, 'Unauthorized access');
         }
 
