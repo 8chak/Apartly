@@ -19,7 +19,7 @@ class AdminMiddleware
         if(!Auth::check()){
             return redirect('/login');
         }
-        if(Auth::user()->type !== 'admin'){  // ✅ Correct
+        if(Auth::user()->user_type !== 'admin'){  // ✅ Correct
            abort(403, 'Unauthorized action.');
         }
         return $next($request);
